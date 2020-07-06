@@ -6,7 +6,9 @@ OpenFortiVPN wrapper with automatic OTP retrieval from IMAP address.
 
 Just scratching my own itch.
 
-I use multiple FortiVPN profiles at work which send OTP via corporate email instead of shared key. Automating the copy-paste process can ease the context switching. 
+I use multiple FortiVPN profiles at work which send OTP via corporate email instead of shared key. Automating the copy-paste process can ease the context switching.
+
+Named it empatpuluh (means Forty in Bahasa Indonesia), a number that comes first in mind when thinking about FortiVPN.
 
 # Getting started
 
