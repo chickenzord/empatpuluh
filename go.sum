@@ -1,5 +1,5 @@
-github.com/chickenzord/mailgrep v0.0.0-20200629095719-fe70e8cb7c43 h1:WRR5D/dDhr6FlnyZXB2WoWj2ovPgFSn4Wi+d45aeSCE=
-github.com/chickenzord/mailgrep v0.0.0-20200629095719-fe70e8cb7c43/go.mod h1:Qe39mKdjdc+2Uu4BexXAplN3RLCyKMZZmoC10HSWhd0=
+github.com/chickenzord/mailgrep v0.1.0 h1:GK+jBS2XTZdXWwt3PAxpos/WFCT7ONVPzvSblGp9FII=
+github.com/chickenzord/mailgrep v0.1.0/go.mod h1:Qe39mKdjdc+2Uu4BexXAplN3RLCyKMZZmoC10HSWhd0=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/emersion/go-imap v1.0.5 h1:8xg/d2wo2BBP3AEP5AOaM/6i8887RGyVW2st/IVHWUw=
