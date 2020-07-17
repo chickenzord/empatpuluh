@@ -143,32 +143,36 @@ func connect(profile *Profile) {
 	<-prompt
 
 	fmt.Println("Getting OTP")
-	fmt.Printf("Delayed %v\n", profile.SearchDelay)
+	fmt.Printf("Delaying %v before search\n", profile.SearchDelay)
 	time.Sleep(profile.SearchDelay)
 
-	attempts := 3
-	otp := ""
-	for attempts > 0 {
-		attempts--
-
-		otp = getOTP(profile)
-		if otp != "" {
-			break
+	chOTP := make(chan string, 1)
+	searchInterval := time.Second
+	searchTimeout := 50 * time.Second
+	go func(profile *Profile) {
+		for {
+			otp := searchOTP(profile)
+			if otp != "" {
+				chOTP <- otp
+				break
+			}
+			fmt.Printf("OTP not found, sleep %s\n", searchInterval)
+			time.Sleep(searchInterval)
 		}
+	}(profile)
 
-		time.Sleep(1500 * time.Millisecond)
-	}
-
-	if otp == "" {
-		log.Fatal("Max attempts reached")
-		cmd.Process.Kill()
-	} else {
+	select {
+	case otp := <-chOTP:
+		fmt.Printf("Found the OTP: %s\n", otp)
 		io.WriteString(stdin, otp)
 		io.WriteString(stdin, "\n")
+	case <-time.After(searchTimeout):
+		cmd.Process.Kill()
+		fmt.Printf("Timeout %s reached\n", searchTimeout)
 	}
 }
 
-func getOTP(p *Profile) string {
+func searchOTP(p *Profile) string {
 	messages, err := mailgrep.ListEmail(
 		&mailgrep.ImapConfig{
 			Address:  fmt.Sprintf("%s:%d", p.Imap.Host, p.Imap.Port),
