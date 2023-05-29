@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/chickenzord/mailgrep"
@@ -78,6 +79,11 @@ func main() {
 		panic(err)
 	}
 
+	runInBackground := false
+	if len(os.Args) > 3 && os.Args[3] == "--background" {
+		runInBackground = true
+	}
+
 	switch os.Args[1] {
 	case "list":
 		for _, profile := range config.Profiles {
@@ -91,11 +97,11 @@ func main() {
 			panic(err)
 		}
 
-		connect(profile)
+		connect(profile, runInBackground)
 	}
 }
 
-func connect(profile *Profile) {
+func connect(profile *Profile, runInBackground bool) {
 	// Prepare command
 	cmd := exec.Command("openfortivpn", "-c", profile.VpnConfig)
 	stdout, err := cmd.StdoutPipe()
@@ -112,7 +118,12 @@ func connect(profile *Profile) {
 	if err := cmd.Start(); err != nil {
 		log.Fatal(err)
 	}
-	defer cmd.Wait()
+	if runInBackground {
+		// Detach the process and run in the background
+		connectInBackground(cmd)
+	} else {
+		defer cmd.Wait()
+	}
 
 	// Wait for OTP prompt
 	checkPrompt := func(bytes []byte) bool {
@@ -170,6 +181,15 @@ func connect(profile *Profile) {
 		cmd.Process.Kill()
 		fmt.Printf("Timeout %s reached\n", searchTimeout)
 	}
+}
+
+func connectInBackground(cmd *exec.Cmd) {
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+
+	// Detach the process from the terminal
+	_ = syscall.Dup2(int(os.Stdin.Fd()), int(os.Stdout.Fd()))
+	_ = syscall.Dup2(int(os.Stdin.Fd()), int(os.Stderr.Fd()))
+	syscall.Setsid()
 }
 
 func searchOTP(p *Profile) string {
