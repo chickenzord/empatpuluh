@@ -1,0 +1,8 @@
+host = 211.59.104.66
+port = 10443
+username = ${vpn username}
+password = ${vpn password}
+set-dns = 1
+pppd-use-peerdns = 1
+# X509 certificate sha256 sum, trust only this one!
+trusted-cert = ad5d8bfff03f5f5f0fd25eba671646cea030c04c68f948dac7b20068249563ba

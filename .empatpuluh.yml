@@ -1,0 +1,16 @@
+profiles:
+- name: production
+  vpn_config: my-vpn-config
+  otp_prompt: "Two-factor authentication token:"
+  search_delay: 2s
+  search_sender: ${email account}
+  search_mailbox: Inbox
+  search_within: 60s
+  search_field: subject
+  search_regex: 'AuthCode: (\d+)'
+  imap:
+    host: imap.gmail.com
+    port: 993
+    username: ${email account}
+    password: ${2fa app password}
+

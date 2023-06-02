@@ -1,0 +1,41 @@
+#!/bin/bash
+# brew install openfortivpn
+
+# Read the username and password
+echo -n "Enter VPN username: "
+read username
+echo -n "Enter VPN password: "
+read -s password
+echo
+
+# Replace ${vpn username} and ${vpn password} with the user's input
+sed -i '' "s/\${vpn username}/$username/g" my-vpn-config
+sed -i '' "s/\${vpn password}/$password/g" my-vpn-config
+
+echo -n "Enter email account: "
+read email_account
+echo -n "Enter 2FA app password: "
+read -s password
+echo
+
+# Replace ${email account} and ${password} with the user's input
+sed -i '' "s/\${email account}/$email_account/g" .empatpuluh.yml
+sed -i '' "s/\${2fa app password}/$password/g" .empatpuluh.yml
+
+cp .empatpuluh.yml $HOME
+
+# Get the path of the current script
+current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Replace ${current path} with the actual path in runvpn file
+sed -i '' "s|\${current path}|$current_path|g" runvpn
+
+chmod +x runvpn
+sudo cp runvpn /usr/local/bin
+
+chmod +x checkvpn
+sudo cp checkvpn /usr/local/bin
+
+chmod +x killvpn
+sudo cp killvpn /usr/local/bin
+
